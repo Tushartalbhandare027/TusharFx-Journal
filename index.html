@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forex Trade Journal v2 | Self-calculating Excel journal &amp; analytics dashboard</title>
+<meta name="description" content="A free, self-calculating Excel trading journal for forex and gold traders: sessions, liquidity sweeps, confirmations, risk-rule alerts, prop-firm tracker, playbook, backtest log and an analyst-style dashboard.">
+<meta property="og:title" content="Forex Trade Journal v2">
+<meta property="og:description" content="Log each trade once. The dashboard, analytics, goals and weekly review fill themselves in.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B2545">
+<style>
+:root{--navy:#0B2545;--blue:#1F5FA8;--teal:#139A9A;--gold:#E8A83A;--green:#2E9E6A;--red:#D64545;--purple:#6A4FB3;
+--bg:#F3F6FB;--card:#fff;--ink:#1B2A41;--muted:#5B6B82;--line:#D5DDE8;--soft:#EEF2F8;--shadow:0 6px 24px rgba(11,37,69,.08)}
+@media (prefers-color-scheme:dark){:root{--bg:#0C1626;--card:#13213A;--ink:#E6ECF5;--muted:#9FB0C8;--line:#24365A;--soft:#182A49;--shadow:0 6px 24px rgba(0,0,0,.35)}}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+a{color:var(--blue)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.nav{position:sticky;top:0;z-index:20;background:var(--navy);border-bottom:3px solid var(--gold)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{color:#fff;font-weight:800;letter-spacing:.04em;text-decoration:none;font-size:15px}
+.brand span{color:var(--gold)}
+.nav nav a{color:#C9D6EA;text-decoration:none;font-size:14px;margin-left:20px}
+.nav nav a:hover{color:#fff}
+@media(max-width:720px){.nav nav a.opt{display:none}}
+.hero{background:linear-gradient(135deg,#0B2545 0%,#12386B 60%,#139A9A 130%);color:#fff;padding:72px 0 80px}
+.hero h1{font-size:clamp(32px,5vw,52px);line-height:1.1;margin:0 0 16px;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{font-size:18px;max-width:640px;color:#D6E2F3;margin:0 0 28px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#E6EEF9;padding:4px 12px;border-radius:999px;font-size:13px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:13px 22px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.gold{background:var(--gold);color:#1B1B1B;box-shadow:0 6px 18px rgba(232,168,58,.35)}
+.btn.ghost{border:1.5px solid rgba(255,255,255,.55);color:#fff}
+section{padding:64px 0;scroll-margin-top:60px}
+section.alt{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+h2{font-size:28px;margin:0 0 8px;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:680px;margin:0 0 32px}
+.kicker{color:var(--teal);font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+@media(max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow)}
+.kpi.t{border-top-color:var(--teal)}.kpi.g{border-top-color:var(--green)}.kpi.o{border-top-color:var(--gold)}.kpi.p{border-top-color:var(--purple)}
+.kpi small{display:block;color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.08em}
+.kpi b{display:block;font-size:26px;color:var(--navy);margin:2px 0}
+@media(prefers-color-scheme:dark){.kpi b{color:#fff}}
+.kpi span{font-size:12px;color:var(--muted)}
+.pos{color:var(--green)!important}.neg{color:var(--red)!important}
+.charts{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:860px){.charts{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:15px;color:var(--navy)}
+@media(prefers-color-scheme:dark){.panel h3{color:#fff}}
+.panel svg{width:100%;height:auto;display:block}
+.note{font-size:12.5px;color:var(--muted);margin-top:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow);transition:transform .15s}
+.card:hover{transform:translateY(-3px)}
+.card .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;margin-bottom:10px;color:#fff;background:var(--blue)}
+.card h3{margin:0 0 6px;font-size:16px}.card p{margin:0;color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--navy);color:#fff;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+td:first-child{font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;padding:0;list-style:none;margin:0}
+.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 18px 18px 64px;position:relative;box-shadow:var(--shadow)}
+.steps li:before{content:counter(s);position:absolute;left:16px;top:16px;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1B1B1B;font-weight:800;display:grid;place-items:center}
+.steps b{display:block;margin-bottom:2px}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.dlcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:var(--shadow)}
+.dlcard.main{border:2px solid var(--gold)}
+.dlcard h3{margin:0 0 6px}.dlcard p{color:var(--muted);margin:0 0 16px;font-size:14px}
+.dlcard .btn{background:var(--navy);color:#fff}
+.dlcard.main .btn{background:var(--gold);color:#1B1B1B}
+.tag{display:inline-block;background:var(--soft);border:1px solid var(--line);color:var(--muted);font-size:12px;padding:2px 10px;border-radius:999px;margin-right:6px}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+summary{font-weight:700;cursor:pointer}
+details p{color:var(--muted);margin:10px 0 0;font-size:14px}
+footer{background:var(--navy);color:#9FB0C8;padding:32px 0;font-size:13px;border-top:3px solid var(--gold)}
+footer a{color:var(--gold)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="#top">FOREX&nbsp;TRADE&nbsp;<span>JOURNAL</span></a>
+  <nav aria-label="Primary"><a class="opt" href="#preview">Preview</a><a href="#features">Features</a><a class="opt" href="#tabs">Tabs</a><a class="opt" href="#start">Quick start</a><a href="#download">Download</a></nav>
+</div></header>
+
+<main id="top">
+<div class="hero"><div class="wrap">
+  <div class="badges"><span class="badge">Version 2</span><span class="badge">Excel workbook</span><span class="badge">12 tabs</span><span class="badge">500-trade capacity</span><span class="badge">Free</span></div>
+  <h1>Log each trade once.<br><em>Let the numbers do the rest.</em></h1>
+  <p>A self-calculating trading journal and analytics dashboard for forex and gold traders. Track sessions, liquidity sweeps, confirmations, risk rules and prop-firm limits, then see exactly where your edge is and where it leaks.</p>
+  <div class="btns">
+    <a class="btn gold" href="Forex_Trade_Journal_v2.xlsx" download>Download the journal</a>
+    <a class="btn ghost" href="Forex_Trade_Journal_v2_DEMO.xlsx" download>Open the demo file</a>
+    <a class="btn ghost" id="repoBtn" href="#" hidden target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+</div></div>
+
+<section id="preview"><div class="wrap">
+  <div class="kicker">Dashboard preview</div>
+  <h2>What the analyst-style dashboard shows</h2>
+  <p class="lead">Numbers below come from the demo file's 87 illustrative trades on a $60,000 combined balance. They are sample data, not real trading results.</p>
+  <div class="kpis">
+    <div class="kpi"><small>NET P&amp;L</small><b class="pos">$5,972.91</b><span>Profit $13,217 | Loss $7,244</span></div>
+    <div class="kpi t"><small>RETURN</small><b class="pos">+9.95%</b><span>on starting balance</span></div>
+    <div class="kpi g"><small>WIN RATE</small><b>41.4%</b><span>W 36 / L 40 / BE 11</span></div>
+    <div class="kpi o"><small>PROFIT FACTOR</small><b>1.82</b><span>above 1.0 = profitable</span></div>
+    <div class="kpi p"><small>EXPECTANCY</small><b>0.34R</b><span>average R per trade</span></div>
+    <div class="kpi"><small>MAX DRAWDOWN</small><b class="neg">-2.8%</b><span>peak to trough</span></div>
+    <div class="kpi t"><small>PLAN ADHERENCE</small><b>80.5%</b><span>Yes 70 / No 17</span></div>
+    <div class="kpi o"><small>RULE BREACHES</small><b>3</b><span>3% of trades flagged</span></div>
+  </div>
+  <div class="charts">
+    <div class="panel"><h3>Equity curve ($)</h3><div id="eq" role="img" aria-label="Equity curve rising from 60,000 to about 65,973 dollars over 87 trades"></div></div>
+    <div class="panel"><h3>Net P&amp;L by session ($)</h3><div id="sess" role="img" aria-label="Bar chart of net profit by trading session"></div></div>
+    <div class="panel"><h3>Net P&amp;L by setup, top 6 ($)</h3><div id="setup" role="img" aria-label="Bar chart of net profit by setup"></div></div>
+    <div class="panel"><h3>Trade outcomes</h3><div id="mix" role="img" aria-label="Donut chart: 36 wins, 40 losses, 11 break-evens"></div></div>
+  </div>
+  <p class="note">Best session in the demo: London-NY Overlap. Best setup: Order Block Retest. Costliest mistake: Closed Early. Your own journal will show your own answers.</p>
+</div></section>
+
+<section id="features" class="alt"><div class="wrap">
+  <div class="kicker">Features</div>
+  <h2>Built to change behaviour, not just record trades</h2>
+  <p class="lead">Most journals tell you what happened. This one flags rule breaks as they happen and shows which habits cost you money.</p>
+  <div class="grid">
+    <div class="card"><div class="ic" style="background:var(--red)">!</div><h3>Risk rules &amp; alerts</h3><p>Max trades per day, daily and weekly loss limits and lot-size checks. Breaches are flagged on every trade and counted on the dashboard.</p></div>
+    <div class="card"><div class="ic" style="background:var(--teal)">&#9788;</div><h3>Sessions &amp; liquidity sweeps</h3><p>Tag Asia, London, New York or the overlap, plus the sweep type. Compare results with and without a sweep.</p></div>
+    <div class="card"><div class="ic" style="background:var(--green)">&#10003;</div><h3>7 confirmations &amp; grading</h3><p>Structure shift, displacement, FVG, rejection, HTF alignment, killzone and news. The count becomes an A+ to C grade.</p></div>
+    <div class="card"><div class="ic">&#9201;</div><h3>Hour &amp; hold-time analysis</h3><p>Find your best and worst entry hours and see whether you hold losers longer than winners.</p></div>
+    <div class="card"><div class="ic" style="background:var(--purple)">&#9776;</div><h3>Daily journal</h3><p>Weekday rows with bias, key levels, sleep, mood, focus and an end-of-day review. Analytics links mood and sleep to results.</p></div>
+    <div class="card"><div class="ic" style="background:#C0504D">&#9733;</div><h3>Playbook</h3><p>Write the rules for each setup and get a live Keep / Refine / Review verdict from your results.</p></div>
+    <div class="card"><div class="ic" style="background:var(--gold);color:#1B1B1B">&#9873;</div><h3>Prop-firm tracker</h3><p>Progress bars for profit target, daily loss and drawdown against your challenge limits.</p></div>
+    <div class="card"><div class="ic">&#8646;</div><h3>Planned vs actual</h3><p>Planned entry and stop against what you did: entry slippage in pips and how often the stop moved.</p></div>
+    <div class="card"><div class="ic" style="background:var(--teal)">&#8801;</div><h3>Lot size &amp; pips</h3><p>Pip results and a suggested lot size from your risk, stop distance and pip value, so you can match your broker statement.</p></div>
+    <div class="card"><div class="ic" style="background:var(--green)">&#9678;</div><h3>Goals</h3><p>Monthly targets for R, win rate, adherence and return, shown next to your actual results.</p></div>
+    <div class="card"><div class="ic" style="background:var(--purple)">&#9874;</div><h3>Backtest log</h3><p>Log tested trades in R to validate a setup before risking money, with a live-versus-backtest gap by setup.</p></div>
+    <div class="card"><div class="ic">&#9783;</div><h3>Multiple accounts</h3><p>Live, demo and prop accounts each keep their own balance and drawdown. Switch the dashboard view with one dropdown.</p></div>
+  </div>
+</div></section>
+
+<section id="tabs"><div class="wrap">
+  <div class="kicker">What is inside</div>
+  <h2>Twelve tabs, one workflow</h2>
+  <p class="lead">You only type into the Journal, Daily Journal and Settings. Everything else calculates.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Tab</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>Guide</td><td>How to use the workbook, colour legend, definitions and assumptions.</td></tr>
+      <tr><td>Dashboard</td><td>Account-filtered KPI cards, edge finder, prop status and 8 charts.</td></tr>
+      <tr><td>Journal</td><td>One row per trade. Blue cells are yours to type; grey cells calculate themselves.</td></tr>
+      <tr><td>Daily Journal</td><td>Weekday rows from your start date: sleep, mood, plan and review. Trades and P&amp;L fill in.</td></tr>
+      <tr><td>Analytics</td><td>18 breakdown tables: session, pair, setup, hour, hold time, emotion, mistakes, rule checks, accounts, months, mood and sleep.</td></tr>
+      <tr><td>Weekly Review</td><td>26 weeks of numbers plus reflection columns.</td></tr>
+      <tr><td>Goals &amp; Prop</td><td>Prop-firm progress against your limits, plus monthly goals.</td></tr>
+      <tr><td>Playbook</td><td>Your setups with concise rules and a live verdict.</td></tr>
+      <tr><td>Backtest</td><td>Tested trades measured in R, compared with live results.</td></tr>
+      <tr><td>Settings</td><td>Account balances, default risk, risk rules, grade thresholds and prop-challenge rules.</td></tr>
+      <tr><td>Lists</td><td>Pairs, pip specs, setups, emotions and mistake tags that feed every dropdown.</td></tr>
+      <tr><td>Chart Data</td><td>Calculation sheet behind the dashboard. Do not edit.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="start" class="alt"><div class="wrap">
+  <div class="kicker">Quick start</div>
+  <h2>Ready in five minutes</h2>
+  <p class="lead">Open the demo first to see a filled-in journal, then switch to the blank file.</p>
+  <ol class="steps">
+    <li><b>Download</b>Get the blank journal and, if you like, the demo file to see it populated.</li>
+    <li><b>Set your numbers</b>On Settings, replace the placeholder balances, risk rules and prop limits with your own.</li>
+    <li><b>Log a trade</b>Fill the blue cells in the Journal in date order. Leave Exit Price blank for open trades.</li>
+    <li><b>Review</b>Open the Dashboard and Analytics, then write your Weekly Review.</li>
+  </ol>
+</div></section>
+
+<section id="download"><div class="wrap">
+  <div class="kicker">Download</div>
+  <h2>Get the workbook</h2>
+  <p class="lead">Both files are Excel (.xlsx). The blank journal has one sample row; the demo has about 90 illustrative trades.</p>
+  <div class="dl">
+    <div class="dlcard main"><h3>Forex Trade Journal v2</h3><p>The blank journal, ready for your trades. Start here.</p><span class="tag">.xlsx</span><span class="tag">12 tabs</span><p style="margin-top:14px"><a class="btn" href="Forex_Trade_Journal_v2.xlsx" download>Download journal</a></p></div>
+    <div class="dlcard"><h3>Demo with sample data</h3><p>Illustrative trades so you can explore the dashboard before entering your own.</p><span class="tag">.xlsx</span><span class="tag">sample data</span><p style="margin-top:14px"><a class="btn" href="Forex_Trade_Journal_v2_DEMO.xlsx" download>Download demo</a></p></div>
+  </div>
+</div></section>
+
+<section class="alt"><div class="wrap">
+  <div class="kicker">Good to know</div>
+  <h2>Questions</h2>
+  <details><summary>Which spreadsheet apps work?</summary><p>It is built for Microsoft Excel 2019 or Microsoft 365 and has been recalculated in LibreOffice. Some formulas use MAXIFS and MINIFS, so older Excel versions may not calculate everything. It has not been tested in Google Sheets.</p></details>
+  <details><summary>Are the balances and prop limits real?</summary><p>No. The account balances (10,000 and 50,000), pip values and every prop-firm limit are placeholders. Replace them on the Settings and Lists tabs.</p></details>
+  <details><summary>How many trades can it hold?</summary><p>500 trades on the Journal. Copy the last row's formulas down to extend it, then widen the ranges on the other tabs.</p></details>
+  <details><summary>Does the data leave my computer?</summary><p>No. The workbook runs locally in your spreadsheet app and nothing is sent anywhere. This page only hosts the download.</p></details>
+  <details><summary>Is this financial advice?</summary><p>No. It records and analyses your own trading and is an educational tool. Trading carries risk, including loss of capital.</p></details>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p><strong style="color:#fff">Forex Trade Journal v2.</strong> Educational tool, not financial advice. Demo figures are illustrative.</p>
+  <p id="repoLine"></p>
+</div></footer>
+
+<script>
+(function(){
+  var EQ = [60000, 59890.58, 59626.72, 60046.03, 60361.98, 60252.6, 61040.16, 61110.05, 61262.35, 61181.15, 61167.72, 61056.89, 60950.7, 61380.06, 61785.31, 61564.4, 61378.87, 61688.98, 61930.98, 62094, 62838.59, 62780.11, 62774.95, 62656.47, 62571.35, 62491.17, 62436.63, 62651.66, 62421.13, 62366.86, 62564.92, 62561.15, 62553.34, 62498.41, 62486.03, 62041.66, 63328.88, 64559.05, 64929.72, 65274.3, 65178.09, 65083.14, 65193.2, 64635.37, 64492.66, 64807.31, 64711.68, 64706.22, 64648.41, 64901.04, 65480.08, 65480.77, 65658.29, 65932.67, 66463.75, 66383.67, 66380.32, 66105.63, 66103.96, 65803.87, 65899.01, 65779.81, 65661.5, 65600.11, 65713.61, 65625.45, 65477.13, 65191.28, 64639.53, 64999.13, 65089.85, 65076.97, 65245.22, 64974.42, 64912.27, 64608.85, 64897.93, 65439.34, 65414.08, 66164.96, 66365.02, 66134.77, 66213.41, 66452.06, 66318.15, 66189.12, 66555.13, 65972.91];
+  var NS = "http://www.w3.org/2000/svg";
+  var C = {blue:"#1F5FA8", teal:"#139A9A", gold:"#E8A83A", green:"#2E9E6A", red:"#D64545", muted:"#7D8CA3", grid:"rgba(125,140,163,.25)"};
+  function fmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+
+  // Equity curve
+  (function(){
+    var W=640,H=260,l=62,r=16,t=14,b=26;
+    var min=Math.min.apply(null,EQ), max=Math.max.apply(null,EQ), pad=(max-min)*0.08; min-=pad; max+=pad;
+    var x=function(i){return l+i*(W-l-r)/(EQ.length-1)}, y=function(v){return t+(max-v)*(H-t-b)/(max-min)};
+    var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="'+NS+'"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+C.teal+'" stop-opacity=".35"/><stop offset="1" stop-color="'+C.teal+'" stop-opacity="0"/></linearGradient></defs>';
+    for(var k=0;k<=4;k++){var v=min+(max-min)*k/4, yy=y(v);
+      s+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+yy+'" y2="'+yy+'" stroke="'+C.grid+'"/><text x="'+(l-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="11" fill="'+C.muted+'">'+fmt(v)+'</text>';}
+    var d=EQ.map(function(v,i){return (i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)}).join(" ");
+    s+='<path d="'+d+' L'+x(EQ.length-1)+' '+(H-b)+' L'+x(0)+' '+(H-b)+' Z" fill="url(#g)"/>';
+    s+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(EQ[0])+'" y2="'+y(EQ[0])+'" stroke="'+C.gold+'" stroke-dasharray="5 4"/>';
+    s+='<path d="'+d+'" fill="none" stroke="'+C.teal+'" stroke-width="2.5" stroke-linejoin="round"/>';
+    s+='<text x="'+l+'" y="'+(H-6)+'" font-size="11" fill="'+C.muted+'">Start</text><text x="'+(W-r)+'" y="'+(H-6)+'" text-anchor="end" font-size="11" fill="'+C.muted+'">Trade #'+(EQ.length-1)+'</text></svg>';
+    document.getElementById("eq").innerHTML=s;
+  })();
+
+  // Horizontal bars
+  function bars(id, rows, color){
+    var W=640, rowH=38, H=rows.length*rowH+8, lab=190, max=Math.max.apply(null,rows.map(function(r){return r[1]}));
+    var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="'+NS+'">';
+    rows.forEach(function(r,i){
+      var yy=i*rowH+6, w=(W-lab-90)*r[1]/max;
+      s+='<text x="'+(lab-10)+'" y="'+(yy+19)+'" text-anchor="end" font-size="12.5" fill="currentColor">'+r[0]+'</text>';
+      s+='<rect x="'+lab+'" y="'+yy+'" width="'+w.toFixed(1)+'" height="26" rx="5" fill="'+color+'"/>';
+      s+='<text x="'+(lab+w+8)+'" y="'+(yy+18)+'" font-size="12.5" font-weight="700" fill="currentColor">'+fmt(r[1])+'</text>';
+    });
+    document.getElementById(id).innerHTML=s+'</svg>';
+  }
+  bars("sess",[["London-NY Overlap",2765.79],["New York",1796.54],["London",1200.70],["Asia",209.88]], C.blue);
+  bars("setup",[["Order Block Retest",3541.75],["Liquidity Sweep Reversal",929.73],["Breaker Block",911.44],["FVG Entry",589.84],["Supply/Demand Zone",407.77],["Break & Retest",265.50]], C.teal);
+
+  // Donut
+  (function(){
+    var data=[["Win",36,C.green],["Loss",40,C.red],["Break-even",11,C.gold]], total=87, R=70, cx=110, cy=110, circ=2*Math.PI*R, off=0;
+    var s='<svg viewBox="0 0 420 220" xmlns="'+NS+'"><g transform="rotate(-90 '+cx+' '+cy+')">';
+    data.forEach(function(d){var len=circ*d[1]/total; s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="'+d[2]+'" stroke-width="34" stroke-dasharray="'+len.toFixed(2)+' '+(circ-len).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'"/>'; off+=len;});
+    s+='</g><text x="'+cx+'" y="'+(cy+2)+'" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor">87</text><text x="'+cx+'" y="'+(cy+22)+'" text-anchor="middle" font-size="12" fill="'+C.muted+'">closed trades</text>';
+    data.forEach(function(d,i){var yy=70+i*34; s+='<rect x="230" y="'+yy+'" width="16" height="16" rx="4" fill="'+d[2]+'"/><text x="254" y="'+(yy+13)+'" font-size="14" fill="currentColor">'+d[0]+': <tspan font-weight="700">'+d[1]+'</tspan> ('+Math.round(d[1]/total*100)+'%)</text>';});
+    document.getElementById("mix").innerHTML=s+'</svg>';
+  })();
+
+  // Auto-link to the GitHub repo when hosted on GitHub Pages (owner.github.io/repo)
+  var h=location.hostname;
+  if(/\.github\.io$/.test(h)){
+    var owner=h.split(".")[0], repo=location.pathname.split("/")[1];
+    if(repo){
+      var url="https://github.com/"+owner+"/"+repo, b=document.getElementById("repoBtn");
+      b.href=url; b.hidden=false;
+      document.getElementById("repoLine").innerHTML='Source and releases on <a href="'+url+'" target="_blank" rel="noopener">GitHub</a>.';
+    }
+  }
+})();
+</script>
+</body>
+</html>
